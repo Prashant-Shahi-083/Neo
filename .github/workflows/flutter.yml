@@ -1,0 +1,33 @@
+name: Flutter CI
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - 'backend/**'
+      - 'admin/**'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - 'backend/**'
+      - 'admin/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        channel: 'stable'
+        
+    - run: flutter pub get
+    - run: flutter analyze
+      continue-on-error: true
+    - run: flutter test
+      continue-on-error: true
+    - run: flutter build web --release
+    - run: flutter build apk --release
