@@ -24,7 +24,7 @@ class AuthRepository {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final response = await _dio.post('/auth/login', data: {
+    final response = await _dio.post('/api/v1/auth/login', data: {
       'username': username,
       'password': password,
     });
@@ -43,7 +43,7 @@ class AuthRepository {
       final accessToken = await getAccessToken();
       if (accessToken != null) {
         await _dio.post(
-          '/auth/logout',
+          '/api/v1/auth/logout',
           options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
         );
       }
@@ -58,7 +58,7 @@ class AuthRepository {
     final token = await getRefreshToken();
     if (token == null) throw Exception('No refresh token');
 
-    final response = await _dio.post('/auth/refresh', data: {
+    final response = await _dio.post('/api/v1/auth/refresh', data: {
       'refresh_token': token,
     });
 
@@ -74,7 +74,7 @@ class AuthRepository {
   Future<UserProfile> fetchProfile() async {
     final accessToken = await getAccessToken();
     final response = await _dio.get(
-      '/auth/me',
+      '/api/v1/auth/me',
       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
     );
     
@@ -87,7 +87,7 @@ class AuthRepository {
   Future<UserProfile> updateProfile(Map<String, dynamic> data) async {
     final accessToken = await getAccessToken();
     final response = await _dio.patch(
-      '/users/profile',
+      '/api/v1/users/profile',
       data: data,
       options: Options(headers: {'Authorization': 'Bearer $accessToken'}),
     );

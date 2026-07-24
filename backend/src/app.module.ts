@@ -20,8 +20,6 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { SystemModule } from './system/system.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
 import { PlayerModule } from './player/player.module';
-import { ApiKey } from './entities/api-key.entity';
-import { SystemSetting } from './entities/system-setting.entity';
 
 @Module({
   imports: [
@@ -60,6 +58,7 @@ import { SystemSetting } from './entities/system-setting.entity';
     AnalyticsModule,
     SystemModule,
     ApiKeysModule,
+    PlayerModule,
   ],
   controllers: [AppController],
   providers: [

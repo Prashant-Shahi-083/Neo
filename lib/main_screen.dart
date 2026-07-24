@@ -67,7 +67,6 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     final playerProvider = context.watch<PlayerProvider>();
     final currentSong = playerProvider.currentTrack;
-    if (currentSong == null) return const SizedBox.shrink();
     final isPlaying = playerProvider.isPlaying;
 
     return LayoutBuilder(
@@ -101,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
 }
 
 class _DesktopHome extends StatelessWidget {
-  final Song currentSong;
+  final Song? currentSong;
   final bool isPlaying;
   final bool liked;
   final int selectedTab;
@@ -141,9 +140,10 @@ class _DesktopHome extends StatelessWidget {
   }
 
   Widget _buildRightPanel(BuildContext context) {
+    if (currentSong == null) return const SizedBox.shrink();
     if (selectedTab == 2) {
       return _LibraryQueuePanel(
-        currentSong: currentSong,
+        currentSong: currentSong!,
         onSongSelected: onSongSelected,
         onClearQueue: () {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -156,7 +156,7 @@ class _DesktopHome extends StatelessWidget {
       );
     }
     return _NowPlayingPanel(
-      song: currentSong,
+      song: currentSong!,
       isPlaying: isPlaying,
       liked: liked,
       onLiked: onLiked,
@@ -1362,7 +1362,7 @@ class _DesktopPlayerBar extends StatelessWidget {
 }
 
 class _MobileHome extends StatelessWidget {
-  final Song currentSong;
+  final Song? currentSong;
   final bool isPlaying;
   final int selectedTab;
   final ValueChanged<int> onTabChanged;

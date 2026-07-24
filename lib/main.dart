@@ -14,11 +14,12 @@ import 'package:just_audio_background/just_audio_background.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.neo.audio',
-    androidNotificationChannelName: 'NEO Audio Playback',
-    androidNotificationOngoing: true,
-  );
+  // Disabled on Windows - JustAudioBackground is mobile-only
+  // await JustAudioBackground.init(
+  //   androidNotificationChannelId: 'com.neo.audio',
+  //   androidNotificationChannelName: 'NEO Audio Playback',
+  //   androidNotificationOngoing: true,
+  // );
   runApp(
     MultiProvider(
       providers: [

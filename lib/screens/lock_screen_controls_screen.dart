@@ -311,145 +311,149 @@ class _LockScreenControlsScreenState extends State<LockScreenControlsScreen> {
   }
 
   Widget _buildLockScreenPlayerWidget(Song currentSong) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: const Color(0xE50B0813),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFF382352), width: 1.2),
-        boxShadow: const [
-          BoxShadow(
-            color: Color(0x3B8B5CF6),
-            blurRadius: 18,
-            spreadRadius: -2,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Large Cover Art
+        NeoCoverArt(
+          colors: currentSong.colors,
+          seed: currentSong.artworkSeed,
+          imagePath: currentSong.imagePath,
+          size: 260,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        const SizedBox(height: 28),
+        // Player Controls Box
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          decoration: BoxDecoration(
+            color: const Color(0xD9E4E4E7),
+            borderRadius: BorderRadius.circular(26),
+            boxShadow: const [
+              BoxShadow(
+                color: Color(0x33000000),
+                blurRadius: 20,
+                spreadRadius: 2,
+              )
+            ],
           ),
-        ],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Row(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              NeoCoverArt(
-                colors: currentSong.colors,
-                seed: currentSong.artworkSeed,
-                imagePath: currentSong.imagePath,
-                size: 48,
-                borderRadius: BorderRadius.circular(8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 24), // Balance right icon
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          currentSong.title,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF18181B),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          currentSong.artist,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Color(0xFF71717A),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    width: 24,
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Icon(Icons.bar_chart_rounded, color: const Color(0xFF71717A), size: 18),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+              const SizedBox(height: 20),
+              // Progress Bar
+              SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  trackHeight: 4,
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 3),
+                  overlayShape: const RoundSliderOverlayShape(overlayRadius: 6),
+                  activeTrackColor: const Color(0xFF3F3F46),
+                  inactiveTrackColor: const Color(0xFFD4D4D8),
+                  thumbColor: const Color(0xFF3F3F46),
+                ),
+                child: SizedBox(
+                  height: 12,
+                  child: Slider(
+                    value: 0.04,
+                    onChanged: (val) {},
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 14),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text(
-                      'NEO',
-                      style: TextStyle(
-                        color: Color(0xFFA855F7),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        letterSpacing: 0.8,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      currentSong.title,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      currentSong.artist,
-                      style: const TextStyle(
-                        color: Color(0xFF9E9EB3),
-                        fontSize: 11,
-                      ),
-                    ),
+                    Text('0:09', style: TextStyle(color: Color(0xFF71717A), fontSize: 10, fontWeight: FontWeight.w600)),
+                    Text('-3:28', style: TextStyle(color: Color(0xFF71717A), fontSize: 10, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ),
-              IconButton(
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () {
-                  setState(() => _isLikedLock = !_isLikedLock);
-                },
-                icon: Icon(
-                  _isLikedLock ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                  color: _isLikedLock ? const Color(0xFFA855F7) : const Color(0xFF686881),
-                  size: 19,
-                ),
+              const SizedBox(height: 16),
+              // Controls
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(width: 24), // Balances AirPlay icon
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.fast_rewind_rounded, color: Color(0xFF18181B), size: 32),
+                      ),
+                      const SizedBox(width: 12),
+                      GestureDetector(
+                        onTap: () {
+                          setState(() => _isPlayingLock = !_isPlayingLock);
+                        },
+                        child: Icon(
+                          _isPlayingLock ? Icons.pause_rounded : Icons.play_arrow_rounded,
+                          color: const Color(0xFF18181B),
+                          size: 44,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.fast_forward_rounded, color: Color(0xFF18181B), size: 32),
+                      ),
+                    ],
+                  ),
+                  const Icon(Icons.airplay_rounded, color: Color(0xFF71717A), size: 22),
+                ],
               ),
             ],
           ),
-          const SizedBox(height: 8),
-          // Progress bar
-          SliderTheme(
-            data: SliderTheme.of(context).copyWith(
-              trackHeight: 3.2,
-              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 4),
-              overlayShape: const RoundSliderOverlayShape(overlayRadius: 8),
-              activeTrackColor: const Color(0xFFA855F7),
-              inactiveTrackColor: const Color(0xFF2C1E3F),
-              thumbColor: Colors.white,
-            ),
-            child: Slider(
-              value: 0.42,
-              onChanged: (val) {},
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text('1:34', style: TextStyle(color: Color(0xFF686881), fontSize: 10)),
-                Text('3:46', style: TextStyle(color: Color(0xFF686881), fontSize: 10)),
-              ],
-            ),
-          ),
-          const SizedBox(height: 6),
-          // Controls
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.skip_previous_rounded, color: Colors.white, size: 28),
-              ),
-              const SizedBox(width: 14),
-              GestureDetector(
-                onTap: () {
-                  setState(() => _isPlayingLock = !_isPlayingLock);
-                },
-                child: Container(
-                  width: 44,
-                  height: 44,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFA855F7),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Center(
-                    child: Icon(
-                      _isPlayingLock ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                      color: Colors.white,
-                      size: 24,
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 14),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.skip_next_rounded, color: Colors.white, size: 28),
-              ),
-            ],
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

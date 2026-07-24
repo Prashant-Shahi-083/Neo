@@ -138,23 +138,26 @@ class SettingsScreen extends StatelessWidget {
                         onTap: () {},
                       ),
                       const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        height: 54,
+                      Center(
                         child: OutlinedButton(
-                          onPressed: () => context.read<AuthProvider>().logout(),
+                          onPressed: () {
+                            context.read<AuthProvider>().logout();
+                            Navigator.of(context, rootNavigator: true).popUntil((route) => route.isFirst);
+                          },
                           style: OutlinedButton.styleFrom(
-                            side: const BorderSide(color: Colors.redAccent),
+                            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 16),
+                            side: const BorderSide(color: Color(0xFF727272), width: 1),
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(32),
                             ),
-                            foregroundColor: Colors.redAccent,
+                            foregroundColor: Colors.white,
                           ),
                           child: const Text(
-                            'Logout',
+                            'Log out',
                             style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
@@ -173,56 +176,49 @@ class SettingsScreen extends StatelessWidget {
 
   Widget _buildSectionHeader(String title) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
+      padding: const EdgeInsets.only(top: 24.0, bottom: 8.0, left: 16.0),
       child: Text(
-        title.toUpperCase(),
+        title,
         style: const TextStyle(
-          color: NeoTheme.textHint,
-          fontSize: 12,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 1.5,
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
   Widget _buildListTile({
-    required IconData icon,
+    required IconData icon, // Kept for compatibility but unused in Spotify UI
     required String title,
     String? subtitle,
     Widget? trailing,
     VoidCallback? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF111119),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: NeoTheme.border),
-      ),
-      child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-        leading: Icon(icon, color: NeoTheme.accent),
-        title: Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
         ),
-        subtitle: subtitle != null
-            ? Text(
+      ),
+      subtitle: subtitle != null
+          ? Padding(
+              padding: const EdgeInsets.only(top: 4.0),
+              child: Text(
                 subtitle,
                 style: const TextStyle(
-                  color: NeoTheme.textSecondary,
-                  fontSize: 13,
+                  color: Color(0xFFA7A7A7),
+                  fontSize: 14,
                 ),
-              )
-            : null,
-        trailing: trailing,
-        onTap: onTap,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-      ),
+              ),
+            )
+          : null,
+      trailing: trailing,
+      onTap: onTap,
     );
   }
 
@@ -240,10 +236,10 @@ class SettingsScreen extends StatelessWidget {
       trailing: Switch(
         value: value,
         onChanged: onChanged,
-        activeThumbColor: NeoTheme.accent,
-        activeTrackColor: NeoTheme.accent.withValues(alpha: 0.3),
-        inactiveTrackColor: NeoTheme.surface,
-        inactiveThumbColor: NeoTheme.textHint,
+        activeColor: const Color(0xFF1DB954),
+        activeTrackColor: const Color(0xFF1DB954).withValues(alpha: 0.5),
+        inactiveThumbColor: const Color(0xFFB3B3B3),
+        inactiveTrackColor: const Color(0xFF535353),
       ),
     );
   }
@@ -261,11 +257,12 @@ class SettingsScreen extends StatelessWidget {
       trailing: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
           value: value,
-          icon: const Icon(Icons.arrow_drop_down_rounded, color: NeoTheme.accent),
-          dropdownColor: NeoTheme.card,
+          icon: const Icon(Icons.arrow_drop_down_rounded, color: Colors.white),
+          dropdownColor: const Color(0xFF282828),
           style: const TextStyle(
-            color: NeoTheme.textPrimary,
-            fontWeight: FontWeight.w600,
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
           onChanged: onChanged,
           items: items.map<DropdownMenuItem<String>>((String item) {

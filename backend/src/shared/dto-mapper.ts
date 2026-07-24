@@ -59,7 +59,7 @@ export class DtoMapper {
       id: artist.id,
       name: artist.name,
       bio: artist.bio || '',
-      imageUrl: artist.imageUrl || '',
+      imageUrl: artist.photoUrl || '',
     };
   }
 }

@@ -34,6 +34,7 @@ class PlaylistProvider extends ChangeNotifier {
       _songs = data['songs'] as List<Song>;
     } catch (e) {
       _error = e.toString().replaceAll('Exception: ', '');
+      _currentPlaylistId = null;
     } finally {
       _isLoading = false;
       notifyListeners();
