@@ -102,6 +102,8 @@ class _PlaybackScreenState extends State<PlaybackScreen>
             onPlayPause: playerProvider.togglePlayPause,
             onShuffle: playerProvider.toggleShuffle,
             onRepeat: playerProvider.cycleRepeatMode,
+            onNext: playerProvider.playNext,
+            onPrevious: playerProvider.playPrevious,
             onLiked: () => setState(() => _liked = !_liked),
             onProgress: (value) {
               final newPosition = Duration(
@@ -126,6 +128,8 @@ class _PlaybackScreenState extends State<PlaybackScreen>
           onLiked: () => setState(() => _liked = !_liked),
           onShuffle: playerProvider.toggleShuffle,
           onRepeat: playerProvider.cycleRepeatMode,
+          onNext: playerProvider.playNext,
+          onPrevious: playerProvider.playPrevious,
           onProgress: (value) {
             final newPosition = Duration(
               milliseconds: (value * playerProvider.duration.inMilliseconds).round()
@@ -154,6 +158,8 @@ class _DesktopPlayer extends StatelessWidget {
   final VoidCallback onLiked;
   final VoidCallback onShuffle;
   final VoidCallback onRepeat;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
   final ValueChanged<double> onProgress;
   final ValueChanged<double> onVolume;
   final ValueChanged<Song> onSongSelected;
@@ -172,6 +178,8 @@ class _DesktopPlayer extends StatelessWidget {
     required this.onLiked,
     required this.onShuffle,
     required this.onRepeat,
+    required this.onNext,
+    required this.onPrevious,
     required this.onProgress,
     required this.onVolume,
     required this.onSongSelected,
@@ -211,8 +219,6 @@ class _DesktopPlayer extends StatelessWidget {
                         onClose: onClose,
                         onPlayPause: onPlayPause,
                         onLiked: onLiked,
-                        onShuffle: onShuffle,
-                        onRepeat: onRepeat,
                         onProgress: onProgress,
                       ),
                     ),
@@ -233,9 +239,15 @@ class _DesktopPlayer extends StatelessWidget {
                   isPlaying: isPlaying,
                   liked: liked,
                   volume: volume,
+                  shuffle: shuffle,
+                  repeat: repeat,
                   onPlayPause: onPlayPause,
                   onLiked: onLiked,
                   onVolume: onVolume,
+                  onShuffle: onShuffle,
+                  onRepeat: onRepeat,
+                  onNext: onNext,
+                  onPrevious: onPrevious,
                 ),
               ),
             ],
@@ -433,8 +445,6 @@ class _PlayerCenter extends StatelessWidget {
   final VoidCallback onClose;
   final VoidCallback onPlayPause;
   final VoidCallback onLiked;
-  final VoidCallback onShuffle;
-  final VoidCallback onRepeat;
   final ValueChanged<double> onProgress;
 
   const _PlayerCenter({
@@ -448,8 +458,6 @@ class _PlayerCenter extends StatelessWidget {
     required this.onClose,
     required this.onPlayPause,
     required this.onLiked,
-    required this.onShuffle,
-    required this.onRepeat,
     required this.onProgress,
   });
 
@@ -664,48 +672,6 @@ class _PlayerCenter extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 9),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: onShuffle,
-                            icon: Icon(
-                              Icons.shuffle_rounded,
-                              color: shuffle
-                                  ? NeoTheme.accent
-                                  : NeoTheme.textSecondary,
-                            ),
-                          ),
-                          const SizedBox(width: 28),
-                          const Icon(
-                            Icons.skip_previous_rounded,
-                            color: Colors.white,
-                            size: 36,
-                          ),
-                          const SizedBox(width: 28),
-                          _LargePlayButton(
-                            isPlaying: isPlaying,
-                            onPressed: onPlayPause,
-                          ),
-                          const SizedBox(width: 28),
-                          const Icon(
-                            Icons.skip_next_rounded,
-                            color: Colors.white,
-                            size: 36,
-                          ),
-                          const SizedBox(width: 28),
-                          IconButton(
-                            onPressed: onRepeat,
-                            icon: Icon(
-                              Icons.repeat_rounded,
-                              color: repeat
-                                  ? NeoTheme.accent
-                                  : NeoTheme.textSecondary,
-                            ),
-                          ),
-                        ],
-                      ),
                     ],
                   ),
                 );
@@ -911,18 +877,30 @@ class _PlayerFooter extends StatelessWidget {
   final bool isPlaying;
   final bool liked;
   final double volume;
+  final bool shuffle;
+  final bool repeat;
   final VoidCallback onPlayPause;
   final VoidCallback onLiked;
   final ValueChanged<double> onVolume;
+  final VoidCallback onShuffle;
+  final VoidCallback onRepeat;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
 
   const _PlayerFooter({
     required this.song,
     required this.isPlaying,
     required this.liked,
     required this.volume,
+    required this.shuffle,
+    required this.repeat,
     required this.onPlayPause,
     required this.onLiked,
     required this.onVolume,
+    required this.onShuffle,
+    required this.onRepeat,
+    required this.onNext,
+    required this.onPrevious,
   });
 
   @override
@@ -992,22 +970,46 @@ class _PlayerFooter extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.skip_previous_rounded,
-                  color: Colors.white,
-                  size: 27,
+                IconButton(
+                  icon: Icon(
+                    Icons.shuffle_rounded,
+                    color: shuffle ? NeoTheme.accent : NeoTheme.textSecondary,
+                    size: 20,
+                  ),
+                  onPressed: onShuffle,
                 ),
-                const SizedBox(width: 36),
+                const SizedBox(width: 16),
+                IconButton(
+                  onPressed: onPrevious,
+                  icon: const Icon(
+                    Icons.skip_previous_rounded,
+                    color: Colors.white,
+                    size: 27,
+                  ),
+                ),
+                const SizedBox(width: 20),
                 _LargePlayButton(
                   isPlaying: isPlaying,
                   onPressed: onPlayPause,
                   size: 47,
                 ),
-                const SizedBox(width: 36),
-                const Icon(
-                  Icons.skip_next_rounded,
-                  color: Colors.white,
-                  size: 27,
+                const SizedBox(width: 20),
+                IconButton(
+                  onPressed: onNext,
+                  icon: const Icon(
+                    Icons.skip_next_rounded,
+                    color: Colors.white,
+                    size: 27,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                IconButton(
+                  icon: Icon(
+                    Icons.repeat_rounded,
+                    color: repeat ? NeoTheme.accent : NeoTheme.textSecondary,
+                    size: 20,
+                  ),
+                  onPressed: onRepeat,
                 ),
               ],
             ),
@@ -1058,6 +1060,8 @@ class _MobilePlayer extends StatelessWidget {
   final VoidCallback onLiked;
   final VoidCallback onShuffle;
   final VoidCallback onRepeat;
+  final VoidCallback onNext;
+  final VoidCallback onPrevious;
   final ValueChanged<double> onProgress;
 
   const _MobilePlayer({
@@ -1073,6 +1077,8 @@ class _MobilePlayer extends StatelessWidget {
     required this.onLiked,
     required this.onShuffle,
     required this.onRepeat,
+    required this.onNext,
+    required this.onPrevious,
     required this.onProgress,
   });
 
@@ -1245,20 +1251,26 @@ class _MobilePlayer extends StatelessWidget {
                                         : NeoTheme.textSecondary,
                                   ),
                                 ),
-                                const Icon(
-                                  Icons.skip_previous_rounded,
-                                  color: Colors.white,
-                                  size: 36,
+                                IconButton(
+                                  onPressed: onPrevious,
+                                  icon: const Icon(
+                                    Icons.skip_previous_rounded,
+                                    color: Colors.white,
+                                    size: 36,
+                                  ),
                                 ),
                                 _LargePlayButton(
                                   isPlaying: isPlaying,
                                   onPressed: onPlayPause,
                                   size: 64,
                                 ),
-                                const Icon(
-                                  Icons.skip_next_rounded,
-                                  color: Colors.white,
-                                  size: 36,
+                                IconButton(
+                                  onPressed: onNext,
+                                  icon: const Icon(
+                                    Icons.skip_next_rounded,
+                                    color: Colors.white,
+                                    size: 36,
+                                  ),
                                 ),
                                 IconButton(
                                   onPressed: onRepeat,

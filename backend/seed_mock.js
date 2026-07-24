@@ -42,10 +42,12 @@ insertArtist.run(imagineDragonsId, 'Imagine Dragons', 1, 1, now, now);
 
 // Insert Songs
 const insertSong = db.prepare(`
-  INSERT INTO songs (id, title, coverUrl, durationMs, status, isExplicit, createdAt, updatedAt)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  INSERT INTO songs (id, title, coverUrl, durationMs, status, isExplicit, audioUrl, createdAt, updatedAt)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
 `);
 const insertSongArtist = db.prepare('INSERT INTO song_artists ("songsId", "artistsId") VALUES (?, ?)');
+
+const sampleMp3 = 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3';
 
 const songs = [
   { id: uuid(), title: 'Blinding Lights', artistId: weekndId, cover: covers[0], durationMs: 200000 },
@@ -59,7 +61,7 @@ const songs = [
 ];
 
 for (const s of songs) {
-  insertSong.run(s.id, s.title, s.cover, s.durationMs, 'PUBLISHED', 0, now, now);
+  insertSong.run(s.id, s.title, s.cover, s.durationMs, 'PUBLISHED', 0, sampleMp3, now, now);
   insertSongArtist.run(s.id, s.artistId);
 }
 

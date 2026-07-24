@@ -22,17 +22,28 @@ class SettingsScreen extends StatelessWidget {
 
           return CustomScrollView(
             slivers: [
-              const SliverToBoxAdapter(
+              SliverToBoxAdapter(
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(24, 32, 24, 16),
-                  child: Text(
-                    'Settings',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -1,
-                    ),
+                  padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
+                  child: Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.arrow_back_rounded, color: Colors.white, size: 28),
+                        onPressed: () => Navigator.of(context).pop(),
+                        padding: EdgeInsets.zero,
+                        alignment: Alignment.centerLeft,
+                      ),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Settings',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: -1,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
