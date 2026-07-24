@@ -35,6 +35,16 @@ import { PlayerModule } from './player/player.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
+        const dbType = configService.get<string>('DB_TYPE', 'better-sqlite3');
+        if (dbType === 'postgres') {
+          return {
+            type: 'postgres',
+            url: configService.get<string>('DATABASE_URL'),
+            autoLoadEntities: true,
+            synchronize: true, // Auto-sync for MVP phase
+            ssl: { rejectUnauthorized: false }, // Required for many managed DBs like Render/Heroku
+          } as any as TypeOrmModuleOptions;
+        }
         return {
           type: 'better-sqlite3',
           database: configService.get<string>('DB_DATABASE', 'neo_db.sqlite'),

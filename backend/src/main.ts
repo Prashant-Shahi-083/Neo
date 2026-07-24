@@ -6,8 +6,10 @@ import helmet from 'helmet';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(helmet());
+  
+  const corsOrigin = process.env.CORS_ORIGIN || '*';
   app.enableCors({
-    origin: '*', // Adjust this for production to specific domains
+    origin: corsOrigin === '*' ? '*' : corsOrigin.split(','),
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     allowedHeaders: 'Content-Type, Accept, Authorization',
   });
