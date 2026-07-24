@@ -2,6 +2,7 @@ services:
   - type: web
     name: neo-backend
     env: node
+    plan: free
     buildCommand: npm install && npm run build
     startCommand: npm run start:prod
     envVars:
@@ -20,3 +21,4 @@ databases:
   - name: neo-postgres
     databaseName: neo_db
     user: neo_user
+    plan: free
