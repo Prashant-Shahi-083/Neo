@@ -42,7 +42,10 @@ import { PlayerModule } from './player/player.module';
             url: configService.get<string>('DATABASE_URL'),
             autoLoadEntities: true,
             synchronize: true, // Auto-sync for MVP phase
-            ssl: { rejectUnauthorized: false }, // Required for many managed DBs like Render/Heroku
+            ssl: { rejectUnauthorized: false }, // Required for Supabase and cloud managed DBs
+            extra: {
+              max: 20, // Connection pool limit for Supabase / cloud PostgreSQL
+            },
           } as any as TypeOrmModuleOptions;
         }
         return {
