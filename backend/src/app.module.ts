@@ -37,14 +37,26 @@ import { PlayerModule } from './player/player.module';
       useFactory: (configService: ConfigService): TypeOrmModuleOptions => {
         const dbType = configService.get<string>('DB_TYPE', 'better-sqlite3');
         if (dbType === 'postgres') {
+          let dbUrl = configService.get<string>('DATABASE_URL') || '';
+          // If using Supabase session pooler on port 5432, automatically convert to Transaction Pooler (port 6543) for IPv4 cloud compatibility
+          if (dbUrl.includes('.pooler.supabase.com:5432')) {
+            console.warn('[Supabase Notice] Automatically converting Supabase Session Pooler (port 5432) to Transaction Pooler (port 6543) for cloud IPv4 compatibility.');
+            dbUrl = dbUrl.replace(':5432', ':6543');
+            if (!dbUrl.includes('pgbouncer=true')) {
+              dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'pgbouncer=true';
+            }
+          } else if (dbUrl.includes(':5432')) {
+            console.warn('[Supabase Warning] Connecting to direct PostgreSQL endpoint on port 5432 may fail with ENETUNREACH on Render without IPv6 routing. Please use the Supabase Transaction Pooler connection string on port 6543.');
+          }
           return {
             type: 'postgres',
-            url: configService.get<string>('DATABASE_URL'),
+            url: dbUrl,
             autoLoadEntities: true,
             synchronize: true, // Auto-sync for MVP phase
             ssl: { rejectUnauthorized: false }, // Required for Supabase and cloud managed DBs
             extra: {
               max: 20, // Connection pool limit for Supabase / cloud PostgreSQL
+              connectionTimeoutMillis: 10000,
             },
           } as any as TypeOrmModuleOptions;
         }
