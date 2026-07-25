@@ -48,6 +48,8 @@ import { PlayerModule } from './player/player.module';
           } else if (dbUrl.includes(':5432')) {
             console.warn('[Supabase Warning] Connecting to direct PostgreSQL endpoint on port 5432 may fail with ENETUNREACH on Render without IPv6 routing. Please use the Supabase Transaction Pooler connection string on port 6543.');
           }
+          // Rely strictly on url property without conflicting host, port, username, password, or database fallbacks
+          // This prevents full usernames like postgres.[project-id] from being overwritten or truncated at runtime
           return {
             type: 'postgres',
             url: dbUrl,
