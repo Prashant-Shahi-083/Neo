@@ -6,6 +6,10 @@ export class CreateArtistDto {
 
   @IsOptional()
   @IsString()
+  photoUrl?: string;
+
+  @IsOptional()
+  @IsString()
   bio?: string;
 
   @IsOptional()

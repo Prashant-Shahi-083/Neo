@@ -14,6 +14,10 @@ export class UpdateAlbumDto {
 
   @IsOptional()
   @IsString()
+  coverUrl?: string;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsOptional()

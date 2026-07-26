@@ -13,6 +13,10 @@ export class CreateAlbumDto {
 
   @IsOptional()
   @IsString()
+  coverUrl?: string;
+
+  @IsOptional()
+  @IsString()
   description?: string;
 
   @IsOptional()

@@ -20,6 +20,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { SystemModule } from './system/system.module';
 import { ApiKeysModule } from './api-keys/api-keys.module';
 import { PlayerModule } from './player/player.module';
+import { SeedModule } from './shared/seed.module';
 
 @Module({
   imports: [
@@ -90,6 +91,7 @@ import { PlayerModule } from './player/player.module';
     SystemModule,
     ApiKeysModule,
     PlayerModule,
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [

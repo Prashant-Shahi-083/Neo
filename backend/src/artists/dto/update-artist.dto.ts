@@ -7,6 +7,10 @@ export class UpdateArtistDto {
 
   @IsOptional()
   @IsString()
+  photoUrl?: string;
+
+  @IsOptional()
+  @IsString()
   bio?: string;
 
   @IsOptional()

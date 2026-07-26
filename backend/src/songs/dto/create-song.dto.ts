@@ -5,12 +5,25 @@ import {
   IsEnum,
   IsUUID,
   IsArray,
+  IsNumber,
 } from 'class-validator';
 import { SongStatus } from '../../entities/song.entity';
 
 export class CreateSongDto {
   @IsString()
   title: string;
+
+  @IsOptional()
+  @IsString()
+  audioUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  coverUrl?: string;
+
+  @IsOptional()
+  @IsNumber()
+  durationMs?: number;
 
   @IsOptional()
   @IsString()
