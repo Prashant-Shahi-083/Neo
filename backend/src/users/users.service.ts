@@ -40,8 +40,15 @@ export class UsersService implements OnModuleInit {
         `Default SUPER_ADMIN seeded (username: admin, password: ${defaultPassword})`,
       );
     } else {
-      const isMatch = await bcrypt.compare(defaultPassword, existing.passwordHash);
-      if (!isMatch || existing.role !== UserRole.SUPER_ADMIN || existing.accountStatus !== AccountStatus.ACTIVE) {
+      const isMatch = await bcrypt.compare(
+        defaultPassword,
+        existing.passwordHash,
+      );
+      if (
+        !isMatch ||
+        existing.role !== UserRole.SUPER_ADMIN ||
+        existing.accountStatus !== AccountStatus.ACTIVE
+      ) {
         existing.passwordHash = await bcrypt.hash(defaultPassword, 10);
         existing.role = UserRole.SUPER_ADMIN;
         existing.accountStatus = AccountStatus.ACTIVE;

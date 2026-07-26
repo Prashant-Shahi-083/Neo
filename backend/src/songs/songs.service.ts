@@ -176,7 +176,7 @@ export class SongsService {
       // 1. Extract Metadata using FFprobe
       const metadata: any = await new Promise((resolve, reject) => {
         ffmpeg.ffprobe(filePath, (err, metadata) => {
-          if (err) reject(err);
+          if (err) reject(err instanceof Error ? err : new Error(String(err)));
           else resolve(metadata);
         });
       });

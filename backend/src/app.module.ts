@@ -40,13 +40,17 @@ import { PlayerModule } from './player/player.module';
           let dbUrl = configService.get<string>('DATABASE_URL') || '';
           // If using Supabase session pooler on port 5432, automatically convert to Transaction Pooler (port 6543) for IPv4 cloud compatibility
           if (dbUrl.includes('.pooler.supabase.com:5432')) {
-            console.warn('[Supabase Notice] Automatically converting Supabase Session Pooler (port 5432) to Transaction Pooler (port 6543) for cloud IPv4 compatibility.');
+            console.warn(
+              '[Supabase Notice] Automatically converting Supabase Session Pooler (port 5432) to Transaction Pooler (port 6543) for cloud IPv4 compatibility.',
+            );
             dbUrl = dbUrl.replace(':5432', ':6543');
             if (!dbUrl.includes('pgbouncer=true')) {
               dbUrl += (dbUrl.includes('?') ? '&' : '?') + 'pgbouncer=true';
             }
           } else if (dbUrl.includes(':5432')) {
-            console.warn('[Supabase Warning] Connecting to direct PostgreSQL endpoint on port 5432 may fail with ENETUNREACH on Render without IPv6 routing. Please use the Supabase Transaction Pooler connection string on port 6543.');
+            console.warn(
+              '[Supabase Warning] Connecting to direct PostgreSQL endpoint on port 5432 may fail with ENETUNREACH on Render without IPv6 routing. Please use the Supabase Transaction Pooler connection string on port 6543.',
+            );
           }
           // Rely strictly on url property without conflicting host, port, username, password, or database fallbacks
           // This prevents full usernames like postgres.[project-id] from being overwritten or truncated at runtime

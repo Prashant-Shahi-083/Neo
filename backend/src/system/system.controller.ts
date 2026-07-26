@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Put, Body, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Body,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { SystemService } from './system.service';
 import { UpdateMaintenanceDto } from './dto/update-maintenance.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -40,7 +48,12 @@ export class SystemController {
   @Post('storage/cleanup')
   @ApiOperation({ summary: 'Run storage cleanup' })
   async cleanupStorage(@Req() req: any) {
-    await this.auditLogsService.logAction('STORAGE_CLEANUP', 'System', 'storage', req.user.username);
+    await this.auditLogsService.logAction(
+      'STORAGE_CLEANUP',
+      'System',
+      'storage',
+      req.user.username,
+    );
     return this.systemService.cleanupStorage();
   }
 
@@ -53,7 +66,12 @@ export class SystemController {
   @Post('database/backup')
   @ApiOperation({ summary: 'Trigger database backup' })
   async triggerBackup(@Req() req: any) {
-    await this.auditLogsService.logAction('DATABASE_BACKUP', 'System', 'database', req.user.username);
+    await this.auditLogsService.logAction(
+      'DATABASE_BACKUP',
+      'System',
+      'database',
+      req.user.username,
+    );
     return this.systemService.triggerDatabaseBackup();
   }
 
@@ -66,7 +84,13 @@ export class SystemController {
   @Put('maintenance')
   @ApiOperation({ summary: 'Update maintenance mode settings' })
   async updateMaintenance(@Body() dto: UpdateMaintenanceDto, @Req() req: any) {
-    await this.auditLogsService.logAction('UPDATE_MAINTENANCE', 'SystemSetting', 'MAINTENANCE_MODE', req.user.username, dto);
+    await this.auditLogsService.logAction(
+      'UPDATE_MAINTENANCE',
+      'SystemSetting',
+      'MAINTENANCE_MODE',
+      req.user.username,
+      dto,
+    );
     return this.systemService.updateMaintenance(dto);
   }
 }

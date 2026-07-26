@@ -21,13 +21,17 @@ async function bootstrap() {
       role: UserRole.SUPER_ADMIN,
       accountStatus: AccountStatus.ACTIVE,
     });
-    console.log(`[Seed] Created new SUPER_ADMIN user: "${username}" with password: "${password}"`);
+    console.log(
+      `[Seed] Created new SUPER_ADMIN user: "${username}" with password: "${password}"`,
+    );
   } else {
     existing.passwordHash = passwordHash;
     existing.role = UserRole.SUPER_ADMIN;
     existing.accountStatus = AccountStatus.ACTIVE;
     await usersService.create(existing);
-    console.log(`[Seed] Successfully reset password and privileges for existing SUPER_ADMIN user: "${username}" to password: "${password}"`);
+    console.log(
+      `[Seed] Successfully reset password and privileges for existing SUPER_ADMIN user: "${username}" to password: "${password}"`,
+    );
   }
 
   await app.close();

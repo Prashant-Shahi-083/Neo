@@ -29,15 +29,15 @@ export class ApiKeysController {
   @ApiOperation({ summary: 'Create a new API key' })
   async create(@Body() createApiKeyDto: CreateApiKeyDto, @Req() req: any) {
     const newKey = await this.apiKeysService.create(createApiKeyDto);
-    
+
     await this.auditLogsService.logAction(
       'CREATE_API_KEY',
       'ApiKey',
       newKey.id,
       req.user.username,
-      { name: newKey.name }
+      { name: newKey.name },
     );
-    
+
     return newKey;
   }
 }

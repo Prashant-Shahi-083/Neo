@@ -16,7 +16,7 @@ export class SystemService {
     const freeMem = os.freemem();
     const usedMem = totalMem - freeMem;
     const memoryUsage = `${((usedMem / totalMem) * 100).toFixed(1)}%`;
-    
+
     const cpus = os.cpus();
     const loadAvg = os.loadavg();
     const cpuLoad = `${((loadAvg[0] / cpus.length) * 100).toFixed(1)}%`;
@@ -29,7 +29,7 @@ export class SystemService {
       cpu: cpuLoad,
       backgroundJobs: 'Running (0 queued)',
       cache: '89% Hit Rate',
-      streaming: '4 Active Nodes'
+      streaming: '4 Active Nodes',
     };
   }
 
@@ -41,7 +41,7 @@ export class SystemService {
       dbVersion: 'PostgreSQL 15',
       nodeVersion: process.version,
       buildDate: new Date().toISOString(),
-      gitCommit: 'N/A'
+      gitCommit: 'N/A',
     };
   }
 
@@ -52,7 +52,7 @@ export class SystemService {
       musicStorage: '380 GB',
       imageStorage: '50 GB',
       freeSpace: '550 GB',
-      tempFiles: '12 GB'
+      tempFiles: '12 GB',
     };
   }
 
@@ -67,8 +67,13 @@ export class SystemService {
       migrationStatus: 'Up to date',
       lastBackup: new Date().toISOString(),
       history: [
-        { id: '1', date: new Date().toISOString(), size: '256 MB', status: 'Success' }
-      ]
+        {
+          id: '1',
+          date: new Date().toISOString(),
+          size: '256 MB',
+          status: 'Success',
+        },
+      ],
     };
   }
 
@@ -77,20 +82,24 @@ export class SystemService {
   }
 
   async getMaintenance() {
-    let record = await this.systemSettingRepo.findOne({ where: { key: 'MAINTENANCE_MODE' } });
+    const record = await this.systemSettingRepo.findOne({
+      where: { key: 'MAINTENANCE_MODE' },
+    });
     if (!record) {
       return {
         isEnabled: false,
         message: 'We are currently undergoing scheduled maintenance.',
         estimatedTime: '2 hours',
-        emergencyLock: false
+        emergencyLock: false,
       };
     }
     return record.value;
   }
 
   async updateMaintenance(payload: any) {
-    let record = await this.systemSettingRepo.findOne({ where: { key: 'MAINTENANCE_MODE' } });
+    let record = await this.systemSettingRepo.findOne({
+      where: { key: 'MAINTENANCE_MODE' },
+    });
     if (!record) {
       record = this.systemSettingRepo.create({ key: 'MAINTENANCE_MODE' });
     }

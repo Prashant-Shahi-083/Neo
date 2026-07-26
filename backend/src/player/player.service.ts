@@ -17,7 +17,9 @@ export class PlayerService {
     });
 
     if (!song) {
-      throw new NotFoundException(`Song with ID ${songId} not found or not available`);
+      throw new NotFoundException(
+        `Song with ID ${songId} not found or not available`,
+      );
     }
 
     return {

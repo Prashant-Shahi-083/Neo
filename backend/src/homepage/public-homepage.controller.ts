@@ -8,10 +8,7 @@ export class PublicHomepageController {
 
   @UseGuards(JwtAuthGuard)
   @Get()
-  getHomepage(
-    @Query('page') page?: string,
-    @Query('limit') limit?: string,
-  ) {
+  getHomepage(@Query('page') page?: string, @Query('limit') limit?: string) {
     return this.homepageService.getPublicFeed(
       Number(page) || 1,
       Number(limit) || 10,
