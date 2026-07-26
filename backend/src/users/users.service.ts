@@ -23,11 +23,12 @@ export class UsersService implements OnModuleInit {
   }
 
   private async seedSuperAdmin() {
+    const defaultPassword = process.env.ADMIN_PASSWORD || 'Admin@123';
     const existing = await this.usersRepository.findOne({
       where: { username: 'admin' },
     });
     if (!existing) {
-      const passwordHash = await bcrypt.hash('admin123', 10);
+      const passwordHash = await bcrypt.hash(defaultPassword, 10);
       const superAdmin = this.usersRepository.create({
         username: 'admin',
         passwordHash,
@@ -36,8 +37,19 @@ export class UsersService implements OnModuleInit {
       });
       await this.usersRepository.save(superAdmin);
       this.logger.log(
-        'Default SUPER_ADMIN seeded (username: admin, password: admin123)',
+        `Default SUPER_ADMIN seeded (username: admin, password: ${defaultPassword})`,
       );
+    } else {
+      const isMatch = await bcrypt.compare(defaultPassword, existing.passwordHash);
+      if (!isMatch || existing.role !== UserRole.SUPER_ADMIN || existing.accountStatus !== AccountStatus.ACTIVE) {
+        existing.passwordHash = await bcrypt.hash(defaultPassword, 10);
+        existing.role = UserRole.SUPER_ADMIN;
+        existing.accountStatus = AccountStatus.ACTIVE;
+        await this.usersRepository.save(existing);
+        this.logger.log(
+          `Existing SUPER_ADMIN synchronized (username: admin, password: ${defaultPassword})`,
+        );
+      }
     }
   }
 
