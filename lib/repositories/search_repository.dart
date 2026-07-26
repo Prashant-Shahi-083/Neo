@@ -12,6 +12,7 @@ class SearchRepository extends BaseRepository {
         'q': query,
         'page': page,
         'limit': limit,
+        // ignore: use_null_aware_elements
         if (type != null) 'type': type,
       };
 

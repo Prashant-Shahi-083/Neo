@@ -8,7 +8,6 @@ import '../neo_cover_art.dart';
 import '../../theme/neo_theme.dart';
 import 'package:provider/provider.dart';
 import '../../services/player_provider.dart';
-import '../../screens/playback_screen.dart';
 
 class HorizontalListWidget extends StatelessWidget {
   final HomepageSection section;
@@ -73,7 +72,7 @@ class HorizontalListWidget extends StatelessWidget {
           subtitle: song.artist,
           imagePath: song.imagePath,
           colors: song.colors,
-          seed: song.artworkSeed ?? song.id.hashCode,
+          seed: song.artworkSeed,
           isCircular: false,
           onTap: () {
             final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
@@ -90,7 +89,7 @@ class HorizontalListWidget extends StatelessWidget {
           subtitle: playlist.subtitle,
           imagePath: playlist.imagePath,
           colors: playlist.colors,
-          seed: playlist.artworkSeed ?? playlist.id.hashCode,
+          seed: playlist.artworkSeed,
           isCircular: false,
           onTap: () {},
         ),

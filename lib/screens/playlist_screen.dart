@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/song.dart';
-import '../models/playlist.dart';
 import '../services/playlist_provider.dart';
 import '../theme/neo_theme.dart';
 import '../widgets/neo_cover_art.dart';

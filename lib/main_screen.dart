@@ -694,6 +694,7 @@ class _DesktopFeedState extends State<_DesktopFeed> {
   }
 }
 
+// ignore: unused_element
 class _SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback onSeeAll;
@@ -1166,6 +1167,7 @@ class _NowPlayingPanel extends StatelessWidget {
   Widget build(BuildContext context) => _buildTrackList(context);
 }
 
+// ignore: unused_element
 class _DesktopPlayerBar extends StatelessWidget {
   final Song song;
   final bool isPlaying;
@@ -1659,6 +1661,7 @@ class _PaginationFooter extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _MobileSongCard extends StatelessWidget {
   final Song song;
   final VoidCallback onTap;
@@ -1730,6 +1733,7 @@ class _MobileSongCard extends StatelessWidget {
   }
 }
 
+// ignore: unused_element
 class _MobileMiniPlayer extends StatelessWidget {
   final Song song;
   final bool isPlaying;

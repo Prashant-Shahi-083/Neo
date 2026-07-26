@@ -38,11 +38,11 @@ class BottomPlayer extends StatelessWidget {
               borderRadius: isMobile ? BorderRadius.circular(16) : BorderRadius.zero,
               border: Border(
                 top: BorderSide(
-                  color: NeoTheme.border.withOpacity(0.5),
+                  color: NeoTheme.border.withValues(alpha: 0.5),
                 ),
-                bottom: isMobile ? BorderSide(color: NeoTheme.border.withOpacity(0.5)) : BorderSide.none,
-                left: isMobile ? BorderSide(color: NeoTheme.border.withOpacity(0.5)) : BorderSide.none,
-                right: isMobile ? BorderSide(color: NeoTheme.border.withOpacity(0.5)) : BorderSide.none,
+                bottom: isMobile ? BorderSide(color: NeoTheme.border.withValues(alpha: 0.5)) : BorderSide.none,
+                left: isMobile ? BorderSide(color: NeoTheme.border.withValues(alpha: 0.5)) : BorderSide.none,
+                right: isMobile ? BorderSide(color: NeoTheme.border.withValues(alpha: 0.5)) : BorderSide.none,
               ),
             ),
             child: isMobile

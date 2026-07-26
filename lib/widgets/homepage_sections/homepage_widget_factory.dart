@@ -22,7 +22,6 @@ class HomepageWidgetFactory {
       case SectionType.continueListening:
         return HorizontalListWidget(section: section);
       case SectionType.unknown:
-      default:
         // Graceful degradation for unknown types
         return const SizedBox.shrink();
     }

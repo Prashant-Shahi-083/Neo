@@ -14,7 +14,8 @@ class LockScreenControlsScreen extends StatefulWidget {
 
 class _LockScreenControlsScreenState extends State<LockScreenControlsScreen> {
   bool _isPlayingLock = true;
-  bool _isLikedLock = true;
+  // ignore: unused_field
+  final bool _isLikedLock = true;
 
   bool _isPlayingWidget = true;
   bool _isLikedWidget = true;

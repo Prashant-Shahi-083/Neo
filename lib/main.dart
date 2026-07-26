@@ -10,7 +10,6 @@ import 'services/library_provider.dart';
 import 'services/playlist_provider.dart';
 import 'services/profile_provider.dart';
 import 'services/settings_provider.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
