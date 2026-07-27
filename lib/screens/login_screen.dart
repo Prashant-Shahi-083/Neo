@@ -7,6 +7,9 @@ import '../main_screen.dart';
 import '../theme/neo_theme.dart';
 import '../widgets/neo_logo.dart';
 import '../services/auth_provider.dart';
+import '../services/home_provider.dart';
+import '../services/library_provider.dart';
+import '../services/profile_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,6 +81,11 @@ class _LoginScreenState extends State<LoginScreen>
     setState(() => _submitting = false);
 
     if (success) {
+      if (mounted) {
+        context.read<HomeProvider>().fetchHomeData();
+        context.read<LibraryProvider>().fetchLibrary();
+        context.read<ProfileProvider>().refreshProfile();
+      }
       Navigator.of(context).pushReplacement(
         PageRouteBuilder<void>(
           pageBuilder: (_, animation, secondaryAnimation) => const MainScreen(),
