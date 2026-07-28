@@ -3,10 +3,23 @@ import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../api/env.dart';
 import '../models/user_profile.dart';
+import '../interceptors/logging_interceptor.dart';
 
 class AuthRepository {
-  final Dio _dio = Dio(BaseOptions(baseUrl: Env.baseUrl));
+  final Dio _dio = Dio(
+    BaseOptions(
+      baseUrl: Env.baseUrl,
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
+    ),
+  );
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+  Dio get dio => _dio;
+
+  AuthRepository() {
+    _dio.interceptors.add(LoggingInterceptor());
+  }
 
   static const String _accessTokenKey = 'access_token';
   static const String _refreshTokenKey = 'refresh_token';
@@ -24,18 +37,27 @@ class AuthRepository {
   }
 
   Future<Map<String, dynamic>> login(String username, String password) async {
-    final response = await _dio.post('/api/v1/auth/login', data: {
-      'username': username,
-      'password': password,
-    });
-    
-    final accessToken = response.data['access_token'];
-    final refreshToken = response.data['refresh_token'];
-    
-    await _storage.write(key: _accessTokenKey, value: accessToken);
-    await _storage.write(key: _refreshTokenKey, value: refreshToken);
-    
-    return response.data;
+    print('💡 AuthRepository.login() entered. Calling _dio.post(/api/v1/auth/login)...');
+    try {
+      final response = await _dio.post('/api/v1/auth/login', data: {
+        'username': username,
+        'password': password,
+      });
+      print('💡 AuthRepository.login() got response: ${response.statusCode}');
+      
+      final accessToken = response.data['access_token'];
+      final refreshToken = response.data['refresh_token'];
+      
+      print('💡 AuthRepository.login() writing tokens to secure storage...');
+      await _storage.write(key: _accessTokenKey, value: accessToken);
+      await _storage.write(key: _refreshTokenKey, value: refreshToken);
+      print('💡 AuthRepository.login() tokens written to secure storage.');
+      
+      return response.data;
+    } catch (e, st) {
+      print('❌ AuthRepository.login() exception: $e\n$st');
+      rethrow;
+    }
   }
 
   Future<void> logout() async {

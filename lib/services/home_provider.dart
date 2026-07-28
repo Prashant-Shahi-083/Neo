@@ -35,12 +35,14 @@ class HomeProvider extends ChangeNotifier {
   List<dynamic> get recentlyPlayed => [];
 
   HomeProvider() {
+    print('🏠 [HOME PROVIDER] [${DateTime.now().toIso8601String()}] HomeProvider instantiated. Calling fetchHomeData()...');
     fetchHomeData();
   }
 
   /// Fetches the first page of homepage data.
   /// Resets all pagination state for a clean reload.
   Future<void> fetchHomeData() async {
+    print('🏠 [HOME PROVIDER] [${DateTime.now().toIso8601String()}] fetchHomeData() started');
     _isLoading = true;
     _error = null;
     _currentPage = 0;
@@ -52,6 +54,7 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
 
     try {
+      print('🏠 [HOME PROVIDER] [${DateTime.now().toIso8601String()}] Calling _homeRepository.fetchHomepageData(page: 1)...');
       final data = await _homeRepository.fetchHomepageData(page: 1, limit: _pageSize);
       final newSections = data['sections'] as List<HomepageSection>;
       final pagination = data['pagination'] as PaginationMeta;
@@ -61,8 +64,10 @@ class HomeProvider extends ChangeNotifier {
       _hasMore = pagination.hasMore;
       
       _isLoading = false;
+      print('🏠 [HOME PROVIDER] [${DateTime.now().toIso8601String()}] fetchHomeData() succeeded. Loaded ${_sections.length} sections. _isLoading=false');
       notifyListeners();
     } catch (e) {
+      print('❌ [HOME PROVIDER] [${DateTime.now().toIso8601String()}] fetchHomeData() failed: $e');
       _isLoading = false;
       _error = e.toString().replaceAll('Exception: ', '');
       notifyListeners();

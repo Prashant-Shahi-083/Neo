@@ -91,3 +91,9 @@ app.*.map.json
 # Node
 node_modules/
 dist/
+
+# Build artifacts and local databases
+**/build/
+**/.kotlin/
+*.sqlite
+*.sqlite-journal

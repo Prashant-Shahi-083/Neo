@@ -16,6 +16,8 @@ import 'widgets/neo_logo.dart';
 import 'services/home_provider.dart';
 import 'services/player_provider.dart';
 import 'services/auth_provider.dart';
+import 'services/library_provider.dart';
+import 'services/profile_provider.dart';
 import 'widgets/playback/bottom_player.dart';
 import 'widgets/homepage_sections/homepage_widget_factory.dart';
 
@@ -30,6 +32,25 @@ class _MainScreenState extends State<MainScreen> {
   bool _liked = true;
   int _mobileTab = 0;
   int _desktopTab = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    print('🖥️ [MAIN SCREEN] [${DateTime.now().toIso8601String()}] initState() called in MainScreen');
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        final homeProvider = context.read<HomeProvider>();
+        if (homeProvider.sections.isEmpty || homeProvider.error != null) {
+          homeProvider.fetchHomeData();
+        }
+        final libraryProvider = context.read<LibraryProvider>();
+        if (libraryProvider.likedSongs.isEmpty && libraryProvider.playlists.isEmpty) {
+          libraryProvider.fetchLibrary();
+        }
+        context.read<ProfileProvider>().refreshProfile();
+      }
+    });
+  }
 
   void _selectSong(Song song, {bool openPlayer = false}) {
     final playerProvider = Provider.of<PlayerProvider>(context, listen: false);
@@ -65,6 +86,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print('🖥️ [MAIN SCREEN] [${DateTime.now().toIso8601String()}] build() called in MainScreen');
     final playerProvider = context.watch<PlayerProvider>();
     final currentSong = playerProvider.currentTrack;
     final isPlaying = playerProvider.isPlaying;

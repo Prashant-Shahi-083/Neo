@@ -15,17 +15,21 @@ class AuthInterceptor extends Interceptor {
 
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
+    final timestamp = DateTime.now().toIso8601String();
     // Skip attaching token for login and refresh endpoints
     if (options.path.contains(ApiConstants.login) || options.path.contains(ApiConstants.refresh)) {
+      print('🔐 [AUTH INTERCEPTOR] [$timestamp] Skipping token attachment for ${options.path}');
       _logger.d('AuthInterceptor: Skipping token attachment for ${options.path}');
       return handler.next(options);
     }
 
     final accessToken = await _storage.getAccessToken();
     if (accessToken != null) {
+      print('🔐 [AUTH INTERCEPTOR] [$timestamp] Attaching Bearer token [REDACTED] to ${options.path}');
       _logger.d('AuthInterceptor: Attaching Bearer token to ${options.path}');
       options.headers['Authorization'] = 'Bearer $accessToken';
     } else {
+      print('⚠️ [AUTH INTERCEPTOR] [$timestamp] No access token found in storage for ${options.path}');
       _logger.w('AuthInterceptor: No access token found in storage for ${options.path}');
     }
 
@@ -73,7 +77,11 @@ class AuthInterceptor extends Interceptor {
 
           _logger.i('AuthInterceptor: Sending refresh request to ${ApiConstants.refresh}');
           // Use a new dio instance to avoid interceptor loops
-          final refreshDio = Dio(BaseOptions(baseUrl: Env.baseUrl));
+          final refreshDio = Dio(BaseOptions(
+            baseUrl: Env.baseUrl,
+            connectTimeout: const Duration(seconds: 60),
+            receiveTimeout: const Duration(seconds: 60),
+          ));
           final response = await refreshDio.post(
             ApiConstants.refresh,
             data: {'refresh_token': refreshToken},

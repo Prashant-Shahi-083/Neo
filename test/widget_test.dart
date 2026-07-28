@@ -17,6 +17,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:prashant/services/settings_provider.dart';
 import 'package:prashant/models/homepage_section.dart';
 import 'package:prashant/models/song.dart';
+import 'package:prashant/models/playlist.dart';
 import 'package:prashant/widgets/playback/bottom_player.dart';
 
 class _TestHomeProvider extends HomeProvider {
@@ -90,6 +91,37 @@ class _TestPlayerProvider extends PlayerProvider {
   }
 }
 
+class _TestLibraryProvider extends LibraryProvider {
+  @override
+  bool get isLoading => false;
+
+  @override
+  String? get error => null;
+
+  @override
+  List<Song> get likedSongs => [];
+
+  @override
+  List<Playlist> get playlists => [];
+
+  @override
+  Future<void> fetchLibrary() async {}
+}
+
+class _TestProfileProvider extends ProfileProvider {
+  @override
+  bool get isLoading => false;
+
+  @override
+  String? get error => null;
+
+  @override
+  Future<void> loadProfile() async {}
+
+  @override
+  Future<void> refreshProfile() async {}
+}
+
 Widget _testApp(Widget home) {
   return MultiProvider(
     providers: [
@@ -97,9 +129,9 @@ Widget _testApp(Widget home) {
       ChangeNotifierProvider<HomeProvider>(create: (_) => _TestHomeProvider()),
       ChangeNotifierProvider<PlayerProvider>(create: (_) => _TestPlayerProvider()),
       ChangeNotifierProvider(create: (_) => SearchProvider()),
-      ChangeNotifierProvider(create: (_) => LibraryProvider()),
+      ChangeNotifierProvider<LibraryProvider>(create: (_) => _TestLibraryProvider()),
       ChangeNotifierProvider(create: (_) => PlaylistProvider()),
-      ChangeNotifierProvider(create: (_) => ProfileProvider()),
+      ChangeNotifierProvider<ProfileProvider>(create: (_) => _TestProfileProvider()),
       ChangeNotifierProvider(create: (_) => SettingsProvider()),
     ],
     child: MaterialApp(theme: NeoTheme.theme, home: home),

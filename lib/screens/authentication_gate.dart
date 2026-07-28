@@ -16,7 +16,9 @@ class _AuthenticationGateState extends State<AuthenticationGate> {
   @override
   void initState() {
     super.initState();
+    print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] initState() called. Scheduling restoreSession()...');
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] PostFrameCallback executing restoreSession()...');
       context.read<AuthProvider>().restoreSession();
     });
   }
@@ -25,7 +27,9 @@ class _AuthenticationGateState extends State<AuthenticationGate> {
   Widget build(BuildContext context) {
     return Consumer<AuthProvider>(
       builder: (context, auth, child) {
+        print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] build(): auth.isLoading=${auth.isLoading}, auth.isAuthenticated=${auth.isAuthenticated}');
         if (auth.isLoading) {
+          print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] -> Rendering CircularProgressIndicator (loading screen)');
           return const Scaffold(
             backgroundColor: Color(0xFF020206),
             body: Center(
@@ -35,8 +39,10 @@ class _AuthenticationGateState extends State<AuthenticationGate> {
         }
         
         if (auth.isAuthenticated) {
+          print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] -> Rendering MainScreen()');
           return const MainScreen();
         } else {
+          print('🚪 [AUTHENTICATION GATE] [${DateTime.now().toIso8601String()}] -> Rendering LoginScreen()');
           return const LoginScreen();
         }
       },

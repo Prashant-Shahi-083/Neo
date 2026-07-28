@@ -61,7 +61,11 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   Future<void> _login() async {
-    if (!(_formKey.currentState?.validate() ?? false)) return;
+    print('💡 _login() called in LoginScreen');
+    if (!(_formKey.currentState?.validate() ?? false)) {
+      print('💡 Form validation failed in LoginScreen');
+      return;
+    }
     
     // Close keyboard
     FocusScope.of(context).unfocus();

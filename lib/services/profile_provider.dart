@@ -13,28 +13,37 @@ class ProfileProvider extends ChangeNotifier {
   String? get error => _error;
 
   ProfileProvider() {
-    _loadProfile();
+    print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] ProfileProvider instantiated. Calling loadProfile()...');
+    loadProfile();
   }
 
-  Future<void> _loadProfile() async {
+  Future<void> loadProfile() async {
+    print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] loadProfile() started');
     _isLoading = true;
     _error = null;
     notifyListeners();
 
     try {
+      print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] Calling _userRepository.getProfile()...');
       _profile = await _userRepository.getProfile();
       if (_profile == null) {
+        print('⚠️ [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] _userRepository.getProfile() returned null.');
         _error = 'Failed to load profile. Please check your connection.';
+      } else {
+        print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] loadProfile() succeeded for user: ${_profile?.username}');
       }
     } catch (e) {
+      print('❌ [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] loadProfile() threw exception: $e');
       _error = 'Failed to load profile.';
     } finally {
       _isLoading = false;
+      print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] loadProfile() finally: setting _isLoading=false, calling notifyListeners()');
       notifyListeners();
     }
   }
 
   Future<void> refreshProfile() async {
-    await _loadProfile();
+    print('👤 [PROFILE PROVIDER] [${DateTime.now().toIso8601String()}] refreshProfile() called');
+    await loadProfile();
   }
 }
