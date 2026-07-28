@@ -41,21 +41,24 @@ jobs:
       continue-on-error: true
     - run: flutter build web --release
     - run: flutter build apk --release
+    - run: flutter build appbundle --release
 
-    - name: Upload APK as Workflow Artifact
+    - name: Upload APK and AAB as Workflow Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: app-release.apk
-        path: build/app/outputs/flutter-apk/app-release.apk
+        name: android-release-binaries
+        path: |
+          build/app/outputs/flutter-apk/app-release.apk
+          build/app/outputs/bundle/release/app-release.aab
 
-    - name: Update GitHub Release APK
+    - name: Update GitHub Release APK and AAB
       uses: ncipollo/release-action@v1
       if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
       with:
         tag: "v1.0.0"
         name: "Neo v1.0.0 Release"
         body: "Latest release of Neo Music App with cold-start timeout improvements and buffering fixes."
-        artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+        artifacts: "build/app/outputs/flutter-apk/app-release.apk,build/app/outputs/bundle/release/app-release.aab"
         allowUpdates: true
         replacesArtifacts: true
         token: ${{ secrets.GITHUB_TOKEN }}
