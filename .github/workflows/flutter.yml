@@ -3,6 +3,7 @@ name: Flutter CI
 on:
   push:
     branches: [ main ]
+    tags: [ 'v*.*.*' ]
     paths-ignore:
       - 'backend/**'
       - 'admin/**'
@@ -11,6 +12,9 @@ on:
     paths-ignore:
       - 'backend/**'
       - 'admin/**'
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -37,3 +41,21 @@ jobs:
       continue-on-error: true
     - run: flutter build web --release
     - run: flutter build apk --release
+
+    - name: Upload APK as Workflow Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: app-release.apk
+        path: build/app/outputs/flutter-apk/app-release.apk
+
+    - name: Update GitHub Release APK
+      uses: ncipollo/release-action@v1
+      if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+      with:
+        tag: "v1.0.0"
+        name: "Neo v1.0.0 Release"
+        body: "Latest release of Neo Music App with cold-start timeout improvements and buffering fixes."
+        artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+        allowUpdates: true
+        replacesArtifacts: true
+        token: ${{ secrets.GITHUB_TOKEN }}
